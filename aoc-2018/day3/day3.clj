@@ -14,11 +14,10 @@
 
 (defn parse-line
   [line]
-  (let [[id, data] (str/split line #" @ ")
-        [start size] (#(str/split data #": "))]
+  (let [[_ id x y width height] (re-matches #"#([0-9]+) @ ([0-9]+),([0-9]+): ([0-9]+)x([0-9]+)" line)]
 
-    [(map #(Integer/parseInt %) (str/split start #","))
-     (map #(Integer/parseInt %) (str/split size #"x"))
+    [(map #(Integer/parseInt %) [x y])
+     (map #(Integer/parseInt %) [width height])
      id]))
 
 (comment
