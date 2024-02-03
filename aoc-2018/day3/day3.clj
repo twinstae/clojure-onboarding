@@ -43,3 +43,24 @@
 (comment
   (answer-1 t)
   (answer-1 input-lines))
+
+(defn find-first
+  "조건을 만족하는 첫번째 요소를 찾아서 반환합니다"
+  [predicate seq]
+  (first (filter predicate seq)))
+
+(defn answer-2
+  [input]
+  (let [squares (->> input
+                     (map parse-line) ;; 입력을 예쁘게 시작점과 크기로 읽어서
+                     (map (fn [[start size id]] [id (points-of [start size])]))) ;; 점들로 변환하고
+        freq-dict (frequencies (mapcat second squares));; 빈도를 세어서
+        no-overlap? (fn [square] (every? (fn [point] (= (freq-dict point) 1)) square))]
+    (->> squares
+         (find-first (fn [[_id square]] (no-overlap? square))) ;; 겹치지 않는 사각형의
+         (first) ;; id는?
+         )))
+
+(comment
+  (answer-2 t) ;;  "#3"
+  (answer-2 input-lines)) 
