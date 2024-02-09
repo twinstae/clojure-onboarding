@@ -10,9 +10,8 @@
 
 (defn sum [s] (reduce + s))
 
-(defn changes [input] (map (fn [n] (Integer/parseInt n)) input))
 
 (comment
   ;; part 1
-  (changes input-lines)
-  (sum (changes input-lines)))
+  (map parse-long input-lines)
+  (sum (map parse-long input-lines)))
