@@ -8,17 +8,15 @@
    "#2 @ 3,1: 4x4"
    "#3 @ 5,5: 2x2"])
 
-(def root "/home/amikojhk/github/clojure-onboarding/")
-(def data-file (slurp (str root "aoc-2018/day3/input1.txt")))
-(def input-lines (str/split-lines data-file))
+(def input-lines (str/split-lines (slurp "resources/day3/input1.txt")))
 
 (defn parse-line
   [line]
   (let [[_ id x y width height] (re-matches #"#([0-9]+) @ ([0-9]+),([0-9]+): ([0-9]+)x([0-9]+)" line)]
 
-    [(map #(Integer/parseInt %) [x y])
-     (map #(Integer/parseInt %) [width height])
-     id]))
+    {:start {:x (parse-long x) :y (parse-long y)}
+     :size  {:width (parse-long width) :height (parse-long height)}
+     :id       id}))
 
 (comment
   (parse-line "#1 @ 1,3: 4x4")
@@ -26,11 +24,11 @@
 
 (defn points-of
   "시작점과 크기를 받아서, 사각형 안의 모든 점들의 좌표를 반환합니다"
-  [[[start-x start-y] [size-x size-y]]]
-  (mapcat (fn [x] (map (fn [y] [x y]) (range start-y (+ start-y size-y)))) (range start-x (+ start-x size-x))))
+  [{{start-x :x start-y :y} :start {width :width height :height} :size}]
+  (mapcat (fn [x] (map (fn [y] [x y]) (range start-y (+ start-y height)))) (range start-x (+ start-x width))))
 
 (comment
-  (points-of ['(1 3) '(4 4)]))
+  (points-of {:start {:x 1, :y 3}, :size {:width 4, :height 4}, :id "1"}))
 
 (defn answer-1
   [input]
