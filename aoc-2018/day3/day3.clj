@@ -38,7 +38,6 @@
        (map parse-line) ;; 입력을 예쁘게 시작점과 크기로 읽어서
        (mapcat points-of) ;; 점들로 변환하고
        (frequencies) ;; 점의 개수를 세어서
-       (seq) ;; 각 점마다
        (filter (fn [[_point count]] (>= count 2))) ;; 2개 이상인 것만 남기고
        (count) ;; 그 숫자를 셉니다
        ))
