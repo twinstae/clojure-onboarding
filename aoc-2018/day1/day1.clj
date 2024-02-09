@@ -4,8 +4,7 @@
    [clojure.string :as str]))
 
 
-(def root "/home/amikojhk/github/clojure-onboarding/")
-(def data-file (slurp (str root "aoc-2018/day1/input1.txt")))
+(def data-file (slurp "aoc-2018/day1/input1.txt"))
 (def input-lines (str/split-lines data-file))
 
 (defn sum [s] (reduce + s))
