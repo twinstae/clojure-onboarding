@@ -27,15 +27,12 @@
   (testing "2번 3번 둘 다 있음"
     (is (= (check "bababc") [true true]))))
 
-(defn count-if
-  [predicate seq]
-  (count (filter predicate seq)))
 
 (defn check-sum
   [input-lines]
   (let [result (map check input-lines)]
-    (* (count-if #(get %1 0) result)
-       (count-if #(get %1 1) result))))
+    (* (count (filter #(get %1 0) result))
+       (count (filter #(get %1 1) result)))))
 
 (comment
   (check-sum input-lines))
