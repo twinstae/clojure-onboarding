@@ -38,9 +38,6 @@
   (check-sum input-lines))
 
 ;; part 2
-(defn zip
-  [a b]
-  (map vector a b))
 
 (defn compare-str
   [[a b]]
@@ -50,7 +47,7 @@
        [diff (conj common x)]
        [(inc diff) common]))
    [0, []]
-   (zip a b)))
+   (map vector a b)))
 
 (def t
   ["abcde" "fghij" "fguij"])
