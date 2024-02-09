@@ -45,10 +45,10 @@
 (defn compare-str
   [[a b]]
   (reduce
-   (fn [[diff common], [x y]]
+   (fn [[diff common] [x y]]
      (if (= x y)
-       [diff, (conj common x)]
-       [(inc diff), common]))
+       [diff (conj common x)]
+       [(inc diff) common]))
    [0, []]
    (zip a b)))
 
