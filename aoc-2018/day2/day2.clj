@@ -4,8 +4,7 @@
             [clojure.string :as str]
             [clojure.test :refer [deftest is testing]]))
 
-(def root "/home/amikojhk/github/clojure-onboarding/")
-(def data-file (slurp (str root "aoc-2018/day2/input1.txt")))
+(def data-file (slurp "resources/day2/input1.txt"))
 (def input-lines (str/split-lines data-file))
 
 
