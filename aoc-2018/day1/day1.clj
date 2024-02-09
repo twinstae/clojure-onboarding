@@ -8,13 +8,15 @@
 
 (defn sum [s] (reduce + s))
 
+
+(def input (map parse-long input-lines))
 (comment
   ;; part 1
-  (map parse-long input-lines)
-  (sum (map parse-long input-lines)))
+
+  (sum input))
 
   ;; part2
-(->> (cycle (map parse-long input-lines))
+(->> (cycle input)
      (reduce
       (fn [[seen current] change]
         (let [next (+ current change)]
