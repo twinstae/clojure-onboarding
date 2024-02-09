@@ -2,7 +2,7 @@
 (ns aoc-2018.day2
   (:require [clojure.set :as set]
             [clojure.string :as str]
-            [clojure.test :refer [is]]))
+            [clojure.test :refer [deftest is testing]]))
 
 (def root "/home/amikojhk/github/clojure-onboarding/")
 (def data-file (slurp (str root "aoc-2018/day2/input1.txt")))
@@ -15,13 +15,18 @@
   (let [dict (set/map-invert (frequencies id))]
     [(contains? dict 2) (contains? dict 3)]))
 
-(is (= (check "abcdef") [false false]))
-(is (= (check "bababc") [true true]))
-(is (= (check "abbcde") [true false]))
-(is (= (check "abcccd") [false true]))
-(is (= (check "aabcdd") [true false]))
-(is (= (check "abcdee") [true false]))
-(is (= (check "ababab") [false true]))
+(deftest check-test
+  (testing "중복 없음"
+    (is (= (check "abcdef") [false false])))
+  (testing "2번만 있음"
+    (is (= (check "abbcde") [true false]))
+    (is (= (check "aabcdd") [true false]))
+    (is (= (check "abcdee") [true false])))
+  (testing "3번만 있음"
+    (is (= (check "abcccd") [false true]))
+    (is (= (check "ababab") [false true])))
+  (testing "2번 3번 둘 다 있음"
+    (is (= (check "bababc") [true true]))))
 
 (defn count-if
   [predicate seq]
