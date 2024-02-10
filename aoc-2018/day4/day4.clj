@@ -90,3 +90,22 @@
   (answer-1 test-input)
   (answer-1 input))
 
+(defn most-sleep-guard
+  [sleep-by-id]
+  (->> sleep-by-id
+       (map #(apply most-sleep-minute %))
+       (sort-by :times)
+       (last)))
+
+(deftest most-sleep-guard-test
+  (is (= (most-sleep-guard test-input)
+         {:id 99, :minute 45, :times 3})))
+
+(defn answer-2
+  [sleep-by-id]
+  (let [result (most-sleep-guard sleep-by-id)]
+    (* (result :id) (result :minute))))
+
+(comment
+  (answer-2 (parse-input-lines test-input-lines))
+  (answer-2 (parse-input-lines input-lines)))
