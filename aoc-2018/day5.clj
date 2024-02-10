@@ -47,3 +47,30 @@
 
 (comment
   (count (reaction input)))
+
+;; part 2
+
+(defn removing-all-x
+  [polymer x]
+  (let [X (Character/toUpperCase x)]
+    (filter (fn [unit] (and (not= unit x) (not= unit X))) polymer)))
+
+(def test-polymer "dabAcCaCBAcCcaDA")
+
+(deftest removing-all-x-test
+  (testing "제거"
+    (is (= (apply str (removing-all-x test-polymer \a)) "dbcCCBcCcD"))
+    (is (= (apply str (removing-all-x test-polymer \b)) "daAcCaCAcCcaDA"))
+    (is (= (apply str (removing-all-x test-polymer \c)) "dabAaBAaDA"))
+    (is (= (apply str (removing-all-x test-polymer \d)) "abAcCaCBAcCcaA"))))
+
+(defn answer-2
+  [polymer]
+  (->> "abcdefghijklmnopqrstuvwxyz"
+       (map (fn [x] (reaction (removing-all-x polymer x))))
+       (apply min-key count)
+       (count)))
+
+(comment
+  (answer-2 test-polymer)
+  (answer-2 input))
