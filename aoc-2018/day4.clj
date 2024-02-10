@@ -1,5 +1,4 @@
-#_{:clj-kondo/ignore [:namespace-name-mismatch]}
-(ns aoc-2018.day4
+(ns day4
   (:require [clojure.string :as str]
             [clojure.test :refer [deftest is testing]]))
 
