@@ -24,36 +24,40 @@
        (sort)
        (reduce
         (fn [acc line]
-          (let [[_ date-str message]  (re-matches #"\[[0-9\-]+ [0-9]+:([0-9]+)\] (.+)" line)
+          (let [{:keys [current result start]} acc
+                [_ date-str message]  (re-matches #"\[[0-9\-]+ [0-9]+:([0-9]+)\] (.+)" line)
                 date (parse-long date-str)]
             (case message
-              "falls asleep" (update acc :result #(conj % {:id (acc :current) :start date}))
-              "wakes up" (update acc :result #(conj (pop %) (assoc (last %) :end date)))
+              "falls asleep" (assoc acc :start date)
+              "wakes up" {:current current :result (conj result {:id current :start start :end date})}
               (assoc acc :current (parse-id message)))))
-        {:current nil :result []})
+        {:current nil :result [] :start nil})
        (#(% :result))
-       (map (fn [sleep] (assoc sleep :duration (- (sleep :end) (sleep :start)))))
        (group-by :id)))
 
 (deftest parse-input-lines-test
   (testing ""
     (is (= (parse-input-lines test-input-lines)
            {10
-            [{:id 10, :start 5, :end 25, :duration 20}
-             {:id 10, :start 30, :end 55, :duration 25}
-             {:id 10, :start 24, :end 29, :duration 5}],
+            [{:id 1, :start 5 :end 25}
+             {:id 10 :start 30 :end 55}
+             {:id 10 :start 24 :end 29}],
             99
-            [{:id 99, :start 40, :end 50, :duration 10}
-             {:id 99, :start 36, :end 46, :duration 10}
-             {:id 99, :start 45, :end 55, :duration 10}]}))))
+            [{:id 99 :start 40 :end 50}
+             {:id 99 :start 36 :end 46}
+             {:id 99 :start 45 :end 55}]}))))
 
 (def test-input (parse-input-lines test-input-lines))
 (def input (parse-input-lines input-lines))
 
+(defn duration
+  [{:keys [start end]}]
+  (- end start))
+
 (defn top-id
   [sleep-by-id]
   (->> sleep-by-id
-       (map (fn [[id sleep-list]] {:id id :total (reduce + (map #(% :duration) sleep-list))}))
+       (map (fn [[id sleep-list]] {:id id :total (reduce + (map duration sleep-list))}))
        (apply max-key :total)
        (#(% :id))))
 
@@ -65,7 +69,7 @@
 (defn most-sleep-minute
   [id sleep-list]
   (->> sleep-list
-       (mapcat (fn [sleep] (set (range (sleep :start) (sleep :end)))))
+       (mapcat (fn [{:keys [start end]}] (set (range start end))))
        (frequencies)
        (apply max-key last)
        ((fn [[minute times]] {:id id :minute minute :times times}))))
