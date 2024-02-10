@@ -46,30 +46,36 @@
 (def input (slurp "resources/day5/input1.txt"))
 
 (comment
-  (count (reaction input)))
+  (->> input
+       (reaction)
+       (count)))
 
 ;; part 2
 
 (defn removing-all-x
-  [polymer x]
+  [x polymer]
   (let [X (Character/toUpperCase x)]
-    (filter (fn [unit] (and (not= unit x) (not= unit X))) polymer)))
+    (remove #(or (= % x) (= % X)) polymer)))
 
 (def test-polymer "dabAcCaCBAcCcaDA")
 
 (deftest removing-all-x-test
   (testing "제거"
-    (is (= (apply str (removing-all-x test-polymer \a)) "dbcCCBcCcD"))
-    (is (= (apply str (removing-all-x test-polymer \b)) "daAcCaCAcCcaDA"))
-    (is (= (apply str (removing-all-x test-polymer \c)) "dabAaBAaDA"))
-    (is (= (apply str (removing-all-x test-polymer \d)) "abAcCaCBAcCcaA"))))
+    (is (= (apply str (removing-all-x \a test-polymer)) "dbcCCBcCcD"))
+    (is (= (apply str (removing-all-x \b test-polymer)) "daAcCaCAcCcaDA"))
+    (is (= (apply str (removing-all-x \c test-polymer)) "dabAaBAaDA"))
+    (is (= (apply str (removing-all-x \d test-polymer)) "abAcCaCBAcCcaA"))))
+
+(def a-to-z "abcdefghijklmnopqrstuvwxyz")
 
 (defn answer-2
   [polymer]
-  (->> "abcdefghijklmnopqrstuvwxyz"
-       (map (fn [x] (reaction (removing-all-x polymer x))))
-       (apply min-key count)
-       (count)))
+  (->> a-to-z
+       (map #(->> polymer
+                  (removing-all-x %)
+                  (reaction)
+                  (count)))
+       (apply min)))
 
 (comment
   (answer-2 test-polymer)
