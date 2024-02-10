@@ -1,8 +1,7 @@
 #_{:clj-kondo/ignore [:namespace-name-mismatch]}
 (ns aoc-2018.day4
-  (:require
-   [clojure.string :as str]
-   [clojure.test :refer [deftest is]]))
+  (:require [clojure.string :as str]
+            [clojure.test :refer [deftest is testing]]))
 
 (def test-input-lines (str/split-lines (slurp "resources/day4/input0.txt")))
 (def input-lines (str/split-lines (slurp "resources/day4/input1.txt")))
@@ -16,8 +15,9 @@
        (parse-long)))
 
 (deftest parse-id-test
-  (is (= (parse-id "Guard #10 begins shift") 10))
-  (is (= (parse-id "Guard #99 begins shift") 99)))
+  (testing "메시지에서 id만 뽑아서 반환합니다"
+    (is (= (parse-id "Guard #10 begins shift") 10))
+    (is (= (parse-id "Guard #99 begins shift") 99))))
 
 (defn parse-input-lines
   [input-lines]
@@ -37,15 +37,16 @@
        (group-by :id)))
 
 (deftest parse-input-lines-test
-  (is (= (parse-input-lines test-input-lines)
-         {10
-          [{:id 10, :start 5, :end 25, :duration 20}
-           {:id 10, :start 30, :end 55, :duration 25}
-           {:id 10, :start 24, :end 29, :duration 5}],
-          99
-          [{:id 99, :start 40, :end 50, :duration 10}
-           {:id 99, :start 36, :end 46, :duration 10}
-           {:id 99, :start 45, :end 55, :duration 10}]})))
+  (testing ""
+    (is (= (parse-input-lines test-input-lines)
+           {10
+            [{:id 10, :start 5, :end 25, :duration 20}
+             {:id 10, :start 30, :end 55, :duration 25}
+             {:id 10, :start 24, :end 29, :duration 5}],
+            99
+            [{:id 99, :start 40, :end 50, :duration 10}
+             {:id 99, :start 36, :end 46, :duration 10}
+             {:id 99, :start 45, :end 55, :duration 10}]}))))
 
 (def test-input (parse-input-lines test-input-lines))
 (def input (parse-input-lines input-lines))
@@ -56,7 +57,10 @@
        (map (fn [[id sleep-list]] {:id id :total (reduce + (map #(% :duration) sleep-list))}))
        (sort-by :total)
        (last)
-       (#(get % :id))))
+       (#(% :id))))
+
+(deftest top-id-test
+  (is (= (top-id test-input) 10)))
 
 (comment (top-id input))
 
@@ -71,7 +75,8 @@
 
 (deftest overlap-minute-test
   (is (= (let [id (top-id test-input)]
-           (most-sleep-minute id (test-input id))) 24)))
+           (most-sleep-minute id (test-input id)))
+         {:id 10, :minute 24, :times 2})))
 
 (defn answer-1
   [sleep-by-id]
