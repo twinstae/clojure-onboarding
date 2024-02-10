@@ -6,7 +6,6 @@
 (def test-input-lines (str/split-lines (slurp "resources/day4/input0.txt")))
 (def input-lines (str/split-lines (slurp "resources/day4/input1.txt")))
 
-
 (defn parse-id
   [message]
   (->> message
@@ -55,8 +54,7 @@
   [sleep-by-id]
   (->> sleep-by-id
        (map (fn [[id sleep-list]] {:id id :total (reduce + (map #(% :duration) sleep-list))}))
-       (sort-by :total)
-       (last)
+       (apply max-key :total)
        (#(% :id))))
 
 (deftest top-id-test
@@ -69,11 +67,10 @@
   (->> sleep-list
        (mapcat (fn [sleep] (set (range (sleep :start) (sleep :end)))))
        (frequencies)
-       (sort-by last)
-       (last)
+       (apply max-key last)
        ((fn [[minute times]] {:id id :minute minute :times times}))))
 
-(deftest overlap-minute-test
+(deftest most-sleep-minute-test
   (is (= (let [id (top-id test-input)]
            (most-sleep-minute id (test-input id)))
          {:id 10, :minute 24, :times 2})))
