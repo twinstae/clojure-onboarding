@@ -3,3 +3,4 @@
 .cpcache
 .clava/*
 .calva/output-window/output.calva-repl
+.nrepl-port
