@@ -53,11 +53,16 @@
   [coordinate area]
   (count (filter #(= coordinate %) area)))
 
-(defn answer-1
+(defn grid-from-coordinates
   [coordinates]
   (let [width (apply max (map first coordinates))
         height (apply max (map last coordinates))
-        grid (rect width height)
+        grid (rect width height)]
+    grid))
+
+(defn answer-1
+  [coordinates]
+  (let [grid (grid-from-coordinates coordinates)
         border (filter (fn [[x y]] (or (zero? x) (zero? y) (= (inc width) x) (= (inc width) y))) grid)
         border-area (map #(closest % coordinates) border)
         area (map #(closest % coordinates) grid)
@@ -73,3 +78,27 @@
 (comment
   (answer-1 test-input)
   (answer-1 input))
+
+;; part 2
+
+(defn safe-location?
+  [limit coordinates from]
+  (->> coordinates
+       (map #(manhattan-distance from %))
+       (reduce +)
+       (#(> limit %))))
+
+(deftest safe-location?-test
+  (testing "Context of the test assertions"
+    (is (safe-location? 32 test-input [4 3]))))
+
+(defn answer-2
+  [coordinates limit]
+  (let [grid (grid-from-coordinates coordinates)]
+    (->> grid
+         (filter #(safe-location? limit coordinates %))
+         (count))))
+
+(comment
+  (answer-2 test-input 32)
+  (answer-2 input 10000))
