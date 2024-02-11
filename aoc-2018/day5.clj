@@ -59,12 +59,16 @@
 
 (def test-polymer "dabAcCaCBAcCcaDA")
 
+(defn get-result
+  [x]
+  (apply str (removing-all-x x test-polymer)))
+
 (deftest removing-all-x-test
   (testing "제거"
-    (is (= (apply str (removing-all-x \a test-polymer)) "dbcCCBcCcD"))
-    (is (= (apply str (removing-all-x \b test-polymer)) "daAcCaCAcCcaDA"))
-    (is (= (apply str (removing-all-x \c test-polymer)) "dabAaBAaDA"))
-    (is (= (apply str (removing-all-x \d test-polymer)) "abAcCaCBAcCcaA"))))
+    (is (= (get-result \a) "dbcCCBcCcD"))
+    (is (= (get-result \b) "daAcCaCAcCcaDA"))
+    (is (= (get-result \c) "dabAaBAaDA"))
+    (is (= (get-result \d) "abAcCaCBAcCcaA"))))
 
 (def a-to-z "abcdefghijklmnopqrstuvwxyz")
 
