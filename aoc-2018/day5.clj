@@ -46,4 +46,41 @@
 (def input (slurp "resources/day5/input1.txt"))
 
 (comment
-  (count (reaction input)))
+  (->> input
+       (reaction)
+       (count)))
+
+;; part 2
+
+(defn removing-all-x
+  [x polymer]
+  (let [X (Character/toUpperCase x)]
+    (remove #(or (= % x) (= % X)) polymer)))
+
+(def test-polymer "dabAcCaCBAcCcaDA")
+
+(defn get-result
+  [x]
+  (apply str (removing-all-x x test-polymer)))
+
+(deftest removing-all-x-test
+  (testing "제거"
+    (is (= (get-result \a) "dbcCCBcCcD"))
+    (is (= (get-result \b) "daAcCaCAcCcaDA"))
+    (is (= (get-result \c) "dabAaBAaDA"))
+    (is (= (get-result \d) "abAcCaCBAcCcaA"))))
+
+(def a-to-z "abcdefghijklmnopqrstuvwxyz")
+
+(defn answer-2
+  [polymer]
+  (->> a-to-z
+       (map #(->> polymer
+                  (removing-all-x %)
+                  (reaction)
+                  (count)))
+       (apply min)))
+
+(comment
+  (answer-2 test-polymer)
+  (answer-2 input))
